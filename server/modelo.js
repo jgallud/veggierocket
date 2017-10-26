@@ -75,23 +75,26 @@ function Partida(){
         this.socket.emit('reset',this.coord);
 		//this.socket=null;
 	}
+	this.randomInt=function(low, high){
+   		return Math.floor(Math.random() * (high - low) + low);
+	}
 	this.ini=function(){
-		this.veg=randomInt(0,25);
+		this.veg=this.randomInt(0,25);
 		var otra=this.veg+1;
 		//console.log(this.veg,"--",otra);
 		for(var i=0;i<10;i++){
-			this.coord.push({'veg':this.veg,'x':randomInt(10,770),'y':randomInt(25,570)});
+			this.coord.push({'veg':this.veg,'x':this.randomInt(10,770),'y':this.randomInt(25,570)});
 		}
 		for(var i=0;i<10;i++){
-			this.coord.push({'veg':otra,'x':randomInt(10,770),'y':randomInt(25,570)});
+			this.coord.push({'veg':otra,'x':this.randomInt(10,770),'y':this.randomInt(25,570)});
 		}
 		for(var i=0;i<30;i++){
-			var alea=randomInt(0,otra-2)
-			this.coord.push({'veg':alea,'x':randomInt(10,770),'y':randomInt(25,570)});
+			var alea=this.randomInt(0,otra-2)
+			this.coord.push({'veg':alea,'x':this.randomInt(10,770),'y':this.randomInt(25,570)});
 		}
 		for(var i=0;i<30;i++){
-			var alea=randomInt(otra++,35);
-			this.coord.push({'veg':alea,'x':randomInt(10,770),'y':randomInt(25,570)});
+			var alea=this.randomInt(otra++,35);
+			this.coord.push({'veg':alea,'x':this.randomInt(10,770),'y':this.randomInt(25,570)});
 		}
 	}
 	this.ini();
@@ -146,9 +149,6 @@ function Jugador(id,x,y,veg){
     this.veg=veg;
 }
 
-function randomInt(low, high){
-   	return Math.floor(Math.random() * (high - low) + low);
-}
 
 module.exports.Juego=Juego;
 module.exports.Partida=Partida;
