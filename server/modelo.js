@@ -83,18 +83,18 @@ function Partida(){
 		var otra=this.veg+1;
 		//console.log(this.veg,"--",otra);
 		for(var i=0;i<10;i++){
-			this.coord.push({'veg':this.veg,'x':this.randomInt(10,770),'y':this.randomInt(25,570)});
+			this.coord.push({'veg':this.veg,'x':this.randomInt(10,720),'y':this.randomInt(25,520)});
 		}
 		for(var i=0;i<10;i++){
-			this.coord.push({'veg':otra,'x':this.randomInt(10,770),'y':this.randomInt(25,570)});
+			this.coord.push({'veg':otra,'x':this.randomInt(10,720),'y':this.randomInt(25,520)});
 		}
 		for(var i=0;i<30;i++){
 			var alea=this.randomInt(0,otra-2)
-			this.coord.push({'veg':alea,'x':this.randomInt(10,770),'y':this.randomInt(25,570)});
+			this.coord.push({'veg':alea,'x':this.randomInt(10,720),'y':this.randomInt(25,520)});
 		}
 		for(var i=0;i<30;i++){
 			var alea=this.randomInt(otra++,35);
-			this.coord.push({'veg':alea,'x':this.randomInt(10,770),'y':this.randomInt(25,570)});
+			this.coord.push({'veg':alea,'x':this.randomInt(10,720),'y':this.randomInt(25,520)});
 		}
 	}
 	this.ini();
