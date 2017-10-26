@@ -1,17 +1,7 @@
 var game;
 var juego;
 var finJuego;
-
-// var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'espacio');
-
-// var juego=new Juego();
-// var finJuego=new FinJuego();
-
-// game.state.add('Game',juego);
-// game.state.add("FinJuego",finJuego);
-//game.state.start('Game');
-
-var cliente;//=new Cliente();
+var cliente;
 
 function nombrePartida(){
 	var cadena='<div><input id="nombre" type="text" placeholder="Nombre de la partida">';
@@ -23,8 +13,6 @@ function nombrePartida(){
 	  $('#nombre').remove();
 	  $('#nombreBtn').remove();   
 	  cliente=new Cliente(nombre);
-	  //cliente.room=nombre;
-	  //cliente.lanzarSocketSrv();	  
 	  mostrarCanvas();
 	});
 }
