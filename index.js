@@ -18,13 +18,6 @@ app.get('/', function(request, response) {
 	response.send(contenido);  
 });
 
-// app.get('/reset', function(request, response) {
-//     //juego=new modelo.Juego();    
-//     juego.reset(io.sockets[0]);
-//     //io.sockets.emit('reset');
-//     response.redirect('/');
-// });
-
 
 server.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
