@@ -1,4 +1,13 @@
 function Juego(){
+	this.partidas={};
+	this.nuevaPartida=function(nombre){
+		if (this.partidas[nombre]==null){
+			this.partidas[nombre]=new Partida();
+		}
+	}
+}
+
+function Partida(){
 	this.jugadores={};
 	this.estado=new Inicial();
 	this.veg;//randomInt(0,35);
@@ -67,7 +76,7 @@ function Juego(){
 		//this.socket=null;
 	}
 	this.ini=function(){
-		this.veg=randomInt(0,25);//35);
+		this.veg=randomInt(0,25);
 		var otra=this.veg+1;
 		//console.log(this.veg,"--",otra);
 		for(var i=0;i<10;i++){
@@ -76,12 +85,12 @@ function Juego(){
 		for(var i=0;i<10;i++){
 			this.coord.push({'veg':otra,'x':randomInt(10,770),'y':randomInt(25,570)});
 		}
-		for(var i=0;i<40;i++){
+		for(var i=0;i<30;i++){
 			var alea=randomInt(0,otra-2)
 			this.coord.push({'veg':alea,'x':randomInt(10,770),'y':randomInt(25,570)});
 		}
-		for(var i=0;i<40;i++){
-			var alea=randomInt(otra++,25);
+		for(var i=0;i<30;i++){
+			var alea=randomInt(otra++,35);
 			this.coord.push({'veg':alea,'x':randomInt(10,770),'y':randomInt(25,570)});
 		}
 	}
@@ -97,6 +106,9 @@ function Inicial(){
 	}
 	this.reset=function(){
 		console.log('Reset en estaod Inicial');
+	}
+	this.volverAJugar=function(juego){
+		juego.reiniciar();
 	}
 }
 
@@ -139,3 +151,4 @@ function randomInt(low, high){
 }
 
 module.exports.Juego=Juego;
+module.exports.Partida=Partida;

@@ -1,33 +1,41 @@
-function Cliente(){
+function Cliente(cadena){
 	this.socket;
 	this.id=null;
 	this.veg;
 	this.coord;
+	this.room=cadena;
 	this.cargarConfiguracion=function(){
-		this.socket.emit('configuracion');
+		this.socket.emit('configuracion',this.room);
 	}
 	this.askNewPlayer = function(){		
-    	this.socket.emit('nuevoJugador',{id:this.id});
+    	this.socket.emit('nuevoJugador',{room:this.room,id:this.id});
 	};
 	this.ini=function(){
 		this.socket=io.connect();
-		this.id=randomInt(1,10000);
+		this.id=randomInt(1,10000);		
+		this.lanzarSocketSrv();
 	}
 	this.reset=function(){
 		this.id=randomInt(1,10000);
 	};
 	this.enviarPosicion=function(x,y,ang,puntos){
-		this.socket.emit('posicion',{"id":this.id,"x":x,"y":y,"ang":ang,"puntos":puntos})
+		this.socket.emit('posicion',this.room,{"id":this.id,"x":x,"y":y,"ang":ang,"puntos":puntos})
 	}
 	this.sendClick = function(x,y){
   		this.socket.emit('click',{x:x,y:y});
 	};
 	this.volverAJugar=function(){
-		this.socket.emit('volverAJugar');	
+		this.socket.emit('volverAJugar',this.room);	
 	}
 	this.lanzarSocketSrv=function(){
+		var cli=this;
+		this.socket.on('connect', function() {   			
+   			cli.socket.emit('room', cli.room);
+   			console.log("envio room");
+   			cli.cargarConfiguracion();
+		});
 		this.socket.on('coord',function(data){
-			this.coord=data;
+			this.coord=data;			
 			game.state.start('Game',true,false,this.coord);
 		});
 		// this.socket.on('nuevoJugador',function(data){	

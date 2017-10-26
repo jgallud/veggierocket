@@ -32,18 +32,24 @@ server.listen(app.get('port'), function() {
 
 
 io.on('connection',function(socket){
-    socket.on('configuracion',function(){
-        juego.iniciar(socket);
+    socket.on('room', function(room) {
+        console.log('nuevo cliente: ',room);
+        //socket.join(room);
+        juego.nuevaPartida(room);
     });
+    socket.on('configuracion',function(room){
+        //console.log(juego.partidas);
+        juego.partidas[room].iniciar(socket);
+    })
     socket.on('nuevoJugador',function(data){        
-        juego.agregarJugador(data.id,socket);
+        juego.partidas[data.room].agregarJugador(data.id,socket);
     });
-    socket.on('posicion',function(data){
-       juego.movimiento(data,socket);
+    socket.on('posicion',function(room,data){
+       juego.partidas[room].movimiento(data,socket);
     });
-    socket.on('volverAJugar',function(data){
+    socket.on('volverAJugar',function(room){
         //juego=new modelo.Juego();
-        juego.volverAJugar(socket);
+        juego.partidas[room].volverAJugar(socket);
     });
 
 });

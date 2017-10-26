@@ -53,7 +53,7 @@ function Juego(){
 
         game.input.onDown.addOnce(this.eliminarText, this);        
 
-        this.veggies = game.add.physicsGroup();
+        this.veggies = game.add.physicsGroup();        
 
         for(var i=0;i<this.coord.length;i++){
             var c = this.veggies.create(this.coord[i].x, this.coord[i].y, 'veggies', this.coord[i].veg);
@@ -106,6 +106,12 @@ function Juego(){
                 //return true;
         }        
     }
+   this.rivalHandler=function(bullet, veg) {      
+        if (veg.frame==this.rival.veg){
+            console.log("colision rival");
+            veg.kill(); 
+        }  
+    }
     this.processHandler=function(player, veg) {        
         return true;
     }
@@ -133,11 +139,16 @@ function Juego(){
                 {
                     console.log('boom');                    
                 }
+                if (game.physics.arcade.collide(this.rival.sprite, this.veggies, this.collisionHandler,this.rivalHandler, this))
+                {
+                    console.log('boom');                    
+                }
+
                 //game.physics.arcade.overlap(nave, this.veggies, this.collisionHandler, null, this);
-                if (game.input.mousePointer.isDown){
-                    var targetAngle = game.math.angleBetween(nave.sprite.x, nave.sprite.y,game.input.mousePointer.x, game.input.mousePointer.y);  
+                if (game.input.activePointer.isDown){
+                    var targetAngle = game.math.angleBetween(nave.sprite.x, nave.sprite.y,game.input.activePointer.x, game.input.activePointer.y);  
                     nave.sprite.rotation = targetAngle;
-                    nave.mover(game.input.mousePointer.x,game.input.mousePointer.y,targetAngle);//nave.sprite.body.angularVelocity);            
+                    nave.mover(game.input.activePointer.x,game.input.activePointer.y,targetAngle);//nave.sprite.body.angularVelocity);            
                 }
                 this.actualizarMarcador();
                 // if (game.input.pointer1.isDown){
@@ -353,7 +364,8 @@ function Nave(id,x,y,veg){
         game.physics.arcade.enable(this.sprite);//, Phaser.Physics.ARCADE);
 
         this.sprite.body.drag.set(50);
-        this.sprite.body.maxVelocity.set(200);        
+        this.sprite.body.maxVelocity.set(200);    
+
     }
     this.ini();
 }
