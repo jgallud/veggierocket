@@ -1,21 +1,30 @@
 function Juego(){
 	this.partidas={};
-	this.nuevaPartida=function(nombre){
+	//this.socket;
+	this.nuevaPartida=function(nombre,socket){
 		if (this.partidas[nombre]==null){
-			this.partidas[nombre]=new Partida();
+			//this.socket=socket;
+			socket.join(nombre);
+			this.partidas[nombre]=new Partida(nombre);
+		}
+		else{
+			socket.join(nombre);
 		}
 	}
 }
 
-function Partida(){
+function Partida(nombre){
 	this.jugadores={};
+	this.nombre=nombre;
 	this.estado=new Inicial();
 	this.veg;//randomInt(0,35);
 	this.x=200;
 	this.socket;
+	this.io;
 	this.coord=[];
-	this.iniciar=function(socket){
+	this.iniciar=function(socket,io){
 		this.socket=socket;
+		this.io=io;
 		this.socket.emit('coord',this.coord);
 	}
 	this.agregarJugador=function(id,socket){
@@ -36,15 +45,20 @@ function Partida(){
 			this.enviarFaltaUno();
 	}
 	this.enviarFaltaUno=function(){
-		this.socket.emit('faltaUno');
+		//this.socket.emit('faltaUno');
+		this.io.sockets.in(this.nombre).emit('faltaUno');
 	}
 	this.enviarAJugar=function(){
-		this.socket.broadcast.emit('aJugar',this.jugadores);
-		this.socket.emit('aJugar',this.jugadores);
+		//this.socket.broadcast.emit('aJugar',this.jugadores);
+		//this.socket.emit('aJugar',this.jugadores);
+		this.io.sockets.in(this.nombre).emit('aJugar',this.jugadores);
+		this.socket.broadcast.to(this.nombre).emit('aJugar',this.jugadores)
 	}
 	this.enviarFinal=function(idGanador){
-		this.socket.broadcast.emit('final',idGanador);
-		this.socket.emit('final',idGanador);
+		//this.socket.broadcast.emit('final',idGanador);
+		//this.socket.emit('final',idGanador);
+		this.io.sockets.in(this.nombre).emit('final',idGanador);
+		this.socket.broadcast.to(this.nombre).emit('final',idGanador)	
 	}
 	this.movimiento=function(data,socket){
 		this.socket=socket;
@@ -56,7 +70,8 @@ function Partida(){
 			this.enviarFinal(data.id);
 		}
 		else{
-			this.socket.broadcast.emit('movimiento',data);
+			//this.socket.broadcast.emit('movimiento',data);
+			this.socket.broadcast.to(this.nombre).emit('movimiento',data)
 		}
 	}
 	this.volverAJugar=function(socket){
@@ -71,30 +86,29 @@ function Partida(){
 		this.coord=[];
 		this.ini();
 		this.estado=new Inicial();
-		this.socket.broadcast.emit('reset',this.coord);
-        this.socket.emit('reset',this.coord);
-		//this.socket=null;
-	}
-	this.randomInt=function(low, high){
-   		return Math.floor(Math.random() * (high - low) + low);
+		this.io.sockets.in(this.nombre).emit('reset',this.coord);
+		this.socket.broadcast.to(this.nombre).emit('reset',this.coord)
+		//this.socket.broadcast.emit('reset',this.coord);
+        //this.socket.emit('reset',this.coord);
+	
 	}
 	this.ini=function(){
-		this.veg=this.randomInt(0,25);
+		this.veg=randomInt(0,25);
 		var otra=this.veg+1;
 		//console.log(this.veg,"--",otra);
 		for(var i=0;i<10;i++){
-			this.coord.push({'veg':this.veg,'x':this.randomInt(10,770),'y':this.randomInt(25,570)});
+			this.coord.push({'veg':this.veg,'x':randomInt(10,720),'y':randomInt(25,520)});
 		}
 		for(var i=0;i<10;i++){
-			this.coord.push({'veg':otra,'x':this.randomInt(10,770),'y':this.randomInt(25,570)});
+			this.coord.push({'veg':otra,'x':randomInt(10,720),'y':randomInt(25,520)});
 		}
 		for(var i=0;i<30;i++){
-			var alea=this.randomInt(0,otra-2)
-			this.coord.push({'veg':alea,'x':this.randomInt(10,770),'y':this.randomInt(25,570)});
+			var alea=randomInt(0,otra-2)
+			this.coord.push({'veg':alea,'x':randomInt(10,720),'y':randomInt(25,520)});
 		}
 		for(var i=0;i<30;i++){
-			var alea=this.randomInt(otra++,35);
-			this.coord.push({'veg':alea,'x':this.randomInt(10,770),'y':this.randomInt(25,570)});
+			var alea=randomInt(otra++,35);
+			this.coord.push({'veg':alea,'x':randomInt(10,720),'y':randomInt(25,520)});
 		}
 	}
 	this.ini();
@@ -149,6 +163,9 @@ function Jugador(id,x,y,veg){
     this.veg=veg;
 }
 
+function randomInt(low, high){
+   	return Math.floor(Math.random() * (high - low) + low);
+}
 
 module.exports.Juego=Juego;
 module.exports.Partida=Partida;
